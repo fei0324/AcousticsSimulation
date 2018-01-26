@@ -38,7 +38,7 @@ def eigenvectorLength(BigMatrix, indexW, positions):
 
 	return listOfLength
 
-def plot(filename,n):
+def plot(filename, n):
 
 	"""
 	Plot the magnitude of eigenvector on points of the original shape
@@ -46,7 +46,8 @@ def plot(filename,n):
 	Input: filename needs to be in '.stl' format ex. filename = 'sphere.stl'
 		   n = the number of the times of division
 
-	Output: 
+	Output: The plot of the first four eigenvectors, color coded by the impact
+			on each point of the objected 
 	"""
 
 	file_mesh = mesh.Mesh.from_file(filename)
