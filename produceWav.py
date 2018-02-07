@@ -1,8 +1,13 @@
 import math
 import numpy as np
-import scipy
+import scipy.io.wavfile
 from stl import mesh
 
+from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.pyplot as plt
+from matplotlib import cm
+
+from chimeVelocity import *
 from mallotImpact import *
 from subdivision import *
 from lengthSolver import *
@@ -11,8 +16,10 @@ from outsideMat import *
 from diagonalMat import *
 from mijMat import *
 
+# import winsound
 
-def produceWav(filename,n,youngs,mallotImpact,fs):
+
+def produceWav(filename,n,youngs,fs):
 
 	"""
 	Goal: Final section of the simulation. Incorporates every previous section
@@ -35,7 +42,7 @@ def produceWav(filename,n,youngs,mallotImpact,fs):
 	triNormVecs = []
 
 	for i in range(len(oriTriangleSet)):
-		points, singleTriangleSet, singleNorVecSet = subdivision(oriTriangleSet[i][0], oriTriangleSet[i][1], oriTriangleSet[i][2],n)
+		points, singleTriangleSet, singleNorVecSet = subdivision(oriTriangleSet[i][0], oriTriangleSet[i][1], oriTriangleSet[i][2], n)
 
 		for j in range(len(singleTriangleSet)):
 			triangleSet.append(singleTriangleSet[j])
@@ -61,20 +68,57 @@ def produceWav(filename,n,youngs,mallotImpact,fs):
 	w, v = np.linalg.eig(BigMatrix)
 
 	# Call mallotImpact()
-	mallotImpact = mallotImpact()
+
+	"""
+	initialImpact = np.zeros(len(positions)*3)
+	initialImpact[18] = 50
+	initialImpact[19] = 50
+	initialImpact[20] = 50
+	initialImpact[21] = 50
+	initialImpact[22] = 50
+	initialImpact[23] = 50
+	"""
+
+	#print "eigenvectors matrix shape = " + str(v.shape)
+	#print "initialImpact shape = " + str(initialImpact.shape)
+
+	v2 = chimeVelocity(0.043, 0.002, 0)
+	initialImpact = mallotImpact(positions, np.array([0, 12.7, 53.5]), v2, 25)
 
 
-	coefficients = np.linalg.lstsq(v, mallotImpact)
+
+	coefficients = np.linalg.lstsq(v, initialImpact)[0]
+	#print "coefficients shape = " + str(coefficients.shape)
+
 
 	# Reshape coefficients, t and eigenvalues for computation
-	coefficientsComp = np.reshape(coefficients, (1,len(coefficients)))
+	#coefficientsComp = np.reshape(coefficients, (1,len(coefficients)))
 	wComp = np.reshape(w, (1,len(w)))
 	t = np.zeros((fs,1))
 
 	for i in range(fs):
-		t[i] = i/fs
+		t[i] = 1.0*i/fs
 
-	wavVector = np.sum(coefficientsComp*np.exp(1j*wComp*t), axis=1)
+
+	# Produce the wave vector
+	wavVectorUnit = np.sum(coefficients*np.exp(1j*wComp*t), axis=1)
+	wavVectorUnit1 = wavVectorUnit
+
+	# Repeat the vector 10 times to make the final product longer (not sure if it is the right way to do it)
+	for i in range(10):
+		wavVector = np.concatenate((wavVectorUnit1, wavVectorUnit))
+		wavVectorUnit1 = wavVector
+
+	# Gives me an audio alert when the program finishes
+	"""
+	duration = 1000
+	freq = 440
+	winsound.Beep(freq, duration)
+	"""
+
+
+	plt.plot(np.real(wavVector))
+	plt.show()
 
 	# Make the wav file
-	scipy.io.wavfile.write("Wavfile", fs, wavVector)
+	scipy.io.wavfile.write("Wavfile.wav", fs, np.float32(np.real(wavVector)))

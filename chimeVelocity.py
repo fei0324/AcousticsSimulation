@@ -1,24 +1,7 @@
 import math
 import numpy as np
-import scipy as sp
+import scipy.constants
 
-
-def u1(l, m1, theta0, theta):
-
-	"""
-	Goal: calculate the velocity of the pendulum at impact
-
-	Input: l = length of the pendulum string (cm)
-		   m1 = mass of the pendulum (kg)
-		   theta0 = initial angle (degree)
-		   theta = angle at impact (degree)
-	Output: u1 = velocity of pendulum at impact
-	"""
-
-	# using the scipy constant standard acceleration of gravity
-	u1 = np.sqrt(2*sp.g*l*(np.cos(theta)-np.cos(theta0))/m1)
-
-	return u1
 
 def chimeVelocity(m1, m2, u2):
 
@@ -32,11 +15,29 @@ def chimeVelocity(m1, m2, u2):
 	"""
 
 	# u1 calculates the velocity of the pendulum at impact 
-	u1 = u1(45.72, 0.043, 20, -60)
+	u1 = calculateu1(457.2, 0.043, np.radians(20.), np.radians(-60.))
 
 	v2 = (u2*(m2-m1) + 2*m1*u1)/(m1+m2)
 
 	return v2
 
+def calculateu1(l, m1, theta, theta0):
 
-print chimeVelocity(0.043, 0.002, 0)
+	"""
+	Goal: calculate the velocity of the pendulum at impact
+
+	Input: l = length of the pendulum string (mm)
+		   m1 = mass of the pendulum (kg)
+		   theta0 = initial angle (radian)
+		   theta = angle at impact (radian)
+	Output: u1 = velocity of pendulum at impact
+	"""
+
+	# using the scipy constant standard acceleration of gravity
+
+	u1 = np.sqrt(2*scipy.constants.g*l*(np.cos(theta)-np.cos(theta0))/m1)
+
+	return u1
+
+
+#print chimeVelocity(0.043, 0.002, 0)
