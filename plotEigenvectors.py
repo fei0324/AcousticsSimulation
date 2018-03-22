@@ -38,12 +38,13 @@ def eigenvectorLength(BigMatrix, indexW, positions):
 
 	return listOfLength
 
-def plot(filename, n):
+def plot(filename, youngs, n):
 
 	"""
 	Plot the magnitude of eigenvector on points of the original shape
 
 	Input: filename needs to be in '.stl' format ex. filename = 'sphere.stl'
+		   youngs = Young's modulus of the material
 		   n = the number of the times of division
 
 	Output: The plot of the first four eigenvectors, color coded by the impact
@@ -75,7 +76,7 @@ def plot(filename, n):
 
 	positions = pointCollection(triangleSet)
 
-	Mijmatrix = mijMat(10,Llist,triangleSet,positions)
+	Mijmatrix = mijMat(youngs,Llist,triangleSet,positions)
 	OTMat = outsideMat(positions,Mijmatrix)
 	Dmat = diagonalMat(positions,Mijmatrix)
 
@@ -107,10 +108,10 @@ def plot(filename, n):
 		zs.append(positions[i][2])
 
 
-	ax0.scatter(xs, ys, zs, c=listOfLength0, cmap=cm.cool)
-	ax1.scatter(xs, ys, zs, c=listOfLength1, cmap=cm.cool)
-	ax2.scatter(xs, ys, zs, c=listOfLength2, cmap=cm.cool)
-	ax3.scatter(xs, ys, zs, c=listOfLength3, cmap=cm.cool)
+	ax0.scatter(xs, ys, zs, c=listOfLength0, cmap=cm.cool, s=50)
+	ax1.scatter(xs, ys, zs, c=listOfLength1, cmap=cm.cool, s=50)
+	ax2.scatter(xs, ys, zs, c=listOfLength2, cmap=cm.cool, s=50)
+	ax3.scatter(xs, ys, zs, c=listOfLength3, cmap=cm.cool, s=50)
 
 	w, v = np.linalg.eig(BigMatrix)
 	print("eigenvalues = " + str(v))

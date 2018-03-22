@@ -4,6 +4,7 @@ import numpy as np
 
 from stl import mesh
 
+
 def subdivision(pt1, pt2, pt3, n):
 
 	"""

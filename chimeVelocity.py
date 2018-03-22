@@ -15,7 +15,7 @@ def chimeVelocity(m1, m2, u2):
 	"""
 
 	# u1 calculates the velocity of the pendulum at impact 
-	u1 = calculateu1(457.2, 0.043, np.radians(20.), np.radians(-60.))
+	u1 = calculateu1(.4572, 0.043, np.radians(20.), np.radians(-60.))
 
 	v2 = (u2*(m2-m1) + 2*m1*u1)/(m1+m2)
 
@@ -26,7 +26,7 @@ def calculateu1(l, m1, theta, theta0):
 	"""
 	Goal: calculate the velocity of the pendulum at impact
 
-	Input: l = length of the pendulum string (mm)
+	Input: l = length of the pendulum string (m)
 		   m1 = mass of the pendulum (kg)
 		   theta0 = initial angle (radian)
 		   theta = angle at impact (radian)

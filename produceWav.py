@@ -71,19 +71,20 @@ def produceWav(filename,n,youngs,fs):
 
 	"""
 	initialImpact = np.zeros(len(positions)*3)
-	initialImpact[18] = 50
-	initialImpact[19] = 50
-	initialImpact[20] = 50
-	initialImpact[21] = 50
-	initialImpact[22] = 50
-	initialImpact[23] = 50
+	initialImpact[18] = 500
+	initialImpact[19] = 500
+	initialImpact[20] = 500
+	initialImpact[21] = 500
+	initialImpact[22] = 500
+	initialImpact[23] = 500
 	"""
+	
 
 	#print "eigenvectors matrix shape = " + str(v.shape)
 	#print "initialImpact shape = " + str(initialImpact.shape)
 
 	v2 = chimeVelocity(0.043, 0.002, 0)
-	initialImpact = mallotImpact(positions, np.array([0, 12.7, 53.5]), v2, 25)
+	initialImpact = mallotImpact(positions, np.array([0, .0127, .0535]), v2, .015)
 
 
 
@@ -116,9 +117,11 @@ def produceWav(filename,n,youngs,fs):
 	winsound.Beep(freq, duration)
 	"""
 
-
+	print np.size(wavVector)
+	#print np.dtype(wavVector)
+	print np.dtype(wavVector[0])
 	plt.plot(np.real(wavVector))
 	plt.show()
 
 	# Make the wav file
-	scipy.io.wavfile.write("Wavfile.wav", fs, np.float32(np.real(wavVector)))
+	scipy.io.wavfile.write("Wavfile.wav", fs, np.int16(np.real(wavVector)))

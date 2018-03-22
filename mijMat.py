@@ -2,6 +2,7 @@ import math
 import numpy as np
 from stl import mesh
 
+import matplotlib.pyplot as plt
 
 def triangleArea(triangleSet):
 
@@ -87,5 +88,12 @@ def mijMat(elastic,l,triangleSet,positions):
 				k2 = triangleAreaSet[triIndex[1]]*elastic/l[triIndex[1]]
 				k = (k1+k2)/2
 				Mij[i,j] = k/np.linalg.norm(positions[j]-positions[i])
+
+
+	plt.matshow(Mij)
+	plt.colorbar()
+	plt.show
+
+
 
 	return Mij
