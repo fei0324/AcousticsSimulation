@@ -89,11 +89,11 @@ def mijMat(elastic,l,triangleSet,positions):
 				k = (k1+k2)/2
 				Mij[i,j] = k/np.linalg.norm(positions[j]-positions[i])
 
-
+"""
 	plt.matshow(Mij)
 	plt.colorbar()
 	plt.show
-
+"""
 
 
 	return Mij
