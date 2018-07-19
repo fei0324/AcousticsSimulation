@@ -68,6 +68,8 @@ def mijMat(elastic,l,triangleSet,positions):
 	Mij = np.zeros((len(positions),len(positions)))
 	triangleAreaSet = triangleArea(triangleSet)
 
+	weirdPoints = []
+
 	for i in range(len(positions)):
 		for j in range(len(positions)):
 
@@ -80,6 +82,8 @@ def mijMat(elastic,l,triangleSet,positions):
 				Mij[i,j] = 0
 			elif len(triIndex) == 1:
 				print("Two points only present in one triangle." + " i = " + str(i) + " j = " + str(j))
+				# weirdPoints.append(positions[i])
+				# weirdPoints.append(positions[j])
 			elif len(triIndex) == 2:
 
 				# k needs to be arbitrary. Need to fix that later
@@ -88,12 +92,5 @@ def mijMat(elastic,l,triangleSet,positions):
 				k2 = triangleAreaSet[triIndex[1]]*elastic/l[triIndex[1]]
 				k = (k1+k2)/2
 				Mij[i,j] = k/np.linalg.norm(positions[j]-positions[i])
-
-"""
-	plt.matshow(Mij)
-	plt.colorbar()
-	plt.show
-"""
-
 
 	return Mij

@@ -59,6 +59,37 @@ def produceWav(filename,n,youngs,fs):
 
 	# This function takes in Young's modulus for different materials
 	Mijmatrix = mijMat(youngs,Llist,triangleSet,positions)
+
+	"""
+	# Plotting for test purposes, delete after
+	fig = plt.figure()
+	ax = fig.add_subplot(111, projection='3d')
+
+	xs = []
+	ys = []
+	zs = []
+	wxs = []
+	wys = []
+	wzs = []
+
+	for i in range(len(positions)):
+		xs.append(positions[i][0])
+		ys.append(positions[i][1])
+		zs.append(positions[i][2])
+
+	ax.scatter(xs, ys, zs)
+	plt.hold(True)
+
+	for i in range(len(weirdPoints)):
+		wxs.append(weirdPoints[i][0])
+		wys.append(weirdPoints[i][1])
+		wzs.append(weirdPoints[i][2])
+
+	ax.scatter(wxs, wys, wzs, s=50, c="yellow")
+	plt.show()
+	"""
+
+
 	OTMat = outsideMat(positions,Mijmatrix)
 	Dmat = diagonalMat(positions,Mijmatrix)
 
@@ -115,13 +146,13 @@ def produceWav(filename,n,youngs,fs):
 	duration = 1000
 	freq = 440
 	winsound.Beep(freq, duration)
-	"""
 
 	print np.size(wavVector)
 	#print np.dtype(wavVector)
 	print np.dtype(wavVector[0])
 	plt.plot(np.real(wavVector))
 	plt.show()
+	"""
 
 	# Make the wav file
 	scipy.io.wavfile.write("Wavfile.wav", fs, np.int16(np.real(wavVector)))
