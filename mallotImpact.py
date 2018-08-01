@@ -43,8 +43,8 @@ def mallotImpact(positions, impactCoor, v2, r):
 
 	return initialImpact
 
-"""
-file_mesh = mesh.Mesh.from_file("newChimeD4.stl")
+
+file_mesh = mesh.Mesh.from_file("newChimeR.0127D4.stl")
 
 oriTriangleSet = file_mesh.vectors
 #triNormVecs = file_mesh.normals
@@ -63,8 +63,10 @@ for i in range(len(oriTriangleSet)):
 #cylinder_mesh = mesh.Mesh.from_file("chimeH507R12.7.stl")
 #print cylinder_mesh.vectors
 positions = pointCollection(triangleSet)
-#print "length of positions = " + str(len(positions))
+print "length of positions = " + str(len(positions))
 v2 = chimeVelocity(0.043, 0.002, 0)
 print "v2 = " + str(v2)
-mallotImpact(positions, np.array([0, .0127, .0535]), v2, .015)
-"""
+initialImpact = mallotImpact(positions, np.array([0, .0127, .0535]), v2, .015)
+print(initialImpact)
+print(initialImpact.shape)
+

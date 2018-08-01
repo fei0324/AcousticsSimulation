@@ -8,6 +8,7 @@ from pointCollection import *
 from mijMat import *
 from outsideMat import *
 from diagonalMat import *
+from mallotImpact import *
 
 
 def desiredDerivs(filename, youngs, n, indexW):
@@ -72,16 +73,20 @@ def desiredDerivs(filename, youngs, n, indexW):
 	#print(vMat)
 	#print(vMat.shape)
 
+	# Need to scale the vMat with initial impact
+	
+
+
 	neumannNormalVecs = neumannNormals(positions, triangleSet, triNormVecs)
-	#print(neumannNormalVecs.shape)
+	print(neumannNormalVecs.shape)
 
 	desiredDerivsMat = np.zeros((len(positions),1))
 
 	for i in range(len(positions)):
 		desiredDerivsMat[i] = np.dot(vMat[i], neumannNormalVecs[i])
-	#print(desiredDerivsMat)
-	#print(desiredDerivsMat.shape)
+	print(desiredDerivsMat)
+	print(desiredDerivsMat.shape)
 
 	return w[indexW], desiredDerivsMat
 
-#desiredDerivs("newChimeR.0127D4.stl", 128*10**9, 0, 0)
+desiredDerivs("newChimeR.0127D4.stl", 128*10**9, 0, 0)
