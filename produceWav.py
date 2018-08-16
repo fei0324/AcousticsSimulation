@@ -155,4 +155,6 @@ def produceWav(filename,n,youngs,fs):
 	"""
 
 	# Make the wav file
-	scipy.io.wavfile.write("Wavfile.wav", fs, np.int16(np.real(wavVector)))
+	scipy.io.wavfile.write("Wavfile1.wav", fs, np.int16(np.real(wavVector)))
+
+produceWav("newChimeR.0127D4.stl",1,128*10**9,44100)

@@ -17,7 +17,7 @@ def mallotImpact(positions, impactCoor, v2, r):
 	       v2 = chime velocity at impact, which gives us a measurement of the magnitude of the impact
 	       r = radius of impact
 
-	Output: A list of initial impacts for every point on the object.
+	Output: A list of initial impacts for every point on the object (This outputs a vector that is 1x3len(positions)
 	"""
 	# use positions from pointCollection
 
@@ -44,29 +44,29 @@ def mallotImpact(positions, impactCoor, v2, r):
 	return initialImpact
 
 
-file_mesh = mesh.Mesh.from_file("newChimeR.0127D4.stl")
+# file_mesh = mesh.Mesh.from_file("newChimeR.0127D4.stl")
 
-oriTriangleSet = file_mesh.vectors
-#triNormVecs = file_mesh.normals
+# oriTriangleSet = file_mesh.vectors
+# #triNormVecs = file_mesh.normals
 
-triangleSet = []
-triNormVecs = []
+# triangleSet = []
+# triNormVecs = []
 
-for i in range(len(oriTriangleSet)):
-	points, singleTriangleSet, singleNorVecSet = subdivision(oriTriangleSet[i][0], oriTriangleSet[i][1], oriTriangleSet[i][2], 2)
+# for i in range(len(oriTriangleSet)):
+# 	points, singleTriangleSet, singleNorVecSet = subdivision(oriTriangleSet[i][0], oriTriangleSet[i][1], oriTriangleSet[i][2], 2)
 
-	for j in range(len(singleTriangleSet)):
-		triangleSet.append(singleTriangleSet[j])
-		triNormVecs.append(singleNorVecSet[j])
+# 	for j in range(len(singleTriangleSet)):
+# 		triangleSet.append(singleTriangleSet[j])
+# 		triNormVecs.append(singleNorVecSet[j])
 
 
-#cylinder_mesh = mesh.Mesh.from_file("chimeH507R12.7.stl")
-#print cylinder_mesh.vectors
-positions = pointCollection(triangleSet)
-print "length of positions = " + str(len(positions))
-v2 = chimeVelocity(0.043, 0.002, 0)
-print "v2 = " + str(v2)
-initialImpact = mallotImpact(positions, np.array([0, .0127, .0535]), v2, .015)
-print(initialImpact)
-print(initialImpact.shape)
+# #cylinder_mesh = mesh.Mesh.from_file("chimeH507R12.7.stl")
+# #print cylinder_mesh.vectors
+# positions = pointCollection(triangleSet)
+# print "length of positions = " + str(len(positions))
+# v2 = chimeVelocity(0.043, 0.002, 0)
+# print "v2 = " + str(v2)
+# initialImpact = mallotImpact(positions, np.array([0, .0127, .0535]), v2, .015)
+# print(initialImpact)
+# print(initialImpact.shape)
 

@@ -67,5 +67,5 @@ def eigenvectors(filename, youngs, n):
 
 v, neumannNormalVecs = eigenvectors("newChimeR.0127D4.stl", 128*10**9, 0)
 
-print v.shape
-print neumannNormalVecs.shape
+#print v.shape
+#print neumannNormalVecs.shape

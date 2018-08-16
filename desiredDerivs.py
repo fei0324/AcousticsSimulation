@@ -9,9 +9,10 @@ from mijMat import *
 from outsideMat import *
 from diagonalMat import *
 from mallotImpact import *
+from chimeVelocity import *
 
 
-def desiredDerivs(filename, youngs, n, indexW):
+def calculateEigenvectors(filename, youngs, n, indexW):
 
 	"""
 	Calculat the desiredDerivs for a certain eigenvalue. This is used in the airsolver
@@ -21,8 +22,9 @@ def desiredDerivs(filename, youngs, n, indexW):
 		   n = the number of the times of division
 		   indexW = the index of eigenvalue and the corresponding index of the eigenvector
 
-	Output: The plot of the first four eigenvectors, color coded by the impact
-			on each point of the objected 
+	Output: w[indexW] - the eigenvalue thatis corresponding to the eigenvector in the calculation
+						This is also the wavelength we are using in the airsolver
+			desiredDerivsMat - the matrix for desired derivatives
 	"""
 
 	file_mesh = mesh.Mesh.from_file(filename)
@@ -57,36 +59,80 @@ def desiredDerivs(filename, youngs, n, indexW):
 	BigMatrix = OTMat + Dmat
 
 	w, v = np.linalg.eig(BigMatrix)
-	#print("eigenvalues = " + str(v))
-	#print(w.shape)
-	#print(v.shape)
 
-	# reorganize eigenvectors
+	return positions, triangleSet, triNormVecs, w, v
 
-	vMat = np.zeros((len(positions), 3))
 
-	for i in range(len(v[:,indexW])):
-		if i%3 == 0:
-			xyz = np.array([v[i,indexW], v[i+1,indexW], v[i+2,indexW]])
-			vMat[i/3] = xyz
+def desiredDerivs(positions, w, v, indexW, neumannNormals, initialImpact):
 
-	#print(vMat)
-	#print(vMat.shape)
+	"""
+	Goal: calculate desiredDerivs for the airsolver function.
 
-	# Need to scale the vMat with initial impact
+	Input: positions - a list of distinct points on the chime
+		   w - eigenvalues coming from the bigMatrix
+		   v - eigenvectors coming from the bigMatrix
+		   indexW - the index of the eigenvalue we are using in this round of calculation
+		 			w[indexW] is also the input wavelength in the airsolver
+		   neumannNormals - the normal vectors corresponding to positions
+		   initialImpact - the output of MallotImpoact function
+		   				   The velocity of all the points on the chime at impact
+		   				   It is currently 3len(positions)x1, need reshape
+
+	Output: w[indexW] - the eigenvalue thatis corresponding to the eigenvector in the calculation
+						This is also the wavelength we are using in the airsolver
+			desiredDerivsMat - the matrix for desired derivatives
+	"""
 	
 
+	# Need to reorganize the eigenvectors from having x, y, z on the same column
+	# e.g. (if len(positions) = n, the current v is 3nx3n and each column is 3nx1)
+	# to a matrix having each x, y, z on the same row (nx3)
+	vMat = np.reshape(v[:,indexW], (len(positions), 3))
+	# print("vMat: " + str(vMat))
 
-	neumannNormalVecs = neumannNormals(positions, triangleSet, triNormVecs)
-	print(neumannNormalVecs.shape)
+	# This coming part is replaced by the reshape function. Should write a test to confirm they
+	# are always the same
+	# vMat = np.zeros((len(positions), 3))
 
-	desiredDerivsMat = np.zeros((len(positions),1))
+
+	# for i in range(len(v[:,indexW])):
+	# 	if i%3 == 0:
+	# 		xyz = np.array([v[i,indexW], v[i+1,indexW], v[i+2,indexW]])
+	# 		vMat[i/3] = xyz
+
+	# print(vMat1.shape)
+	# print(vMat.shape)
+	# print(vMat1 == vMat)
+
+	# Add mallotImpact scaler
+	# Need to test initialImpact cannot be all 0
+	reshapedImpact = np.reshape(initialImpact, (len(positions), 3))
+
+	# print(vMat.shape == reshapedImpact.shape) #True
+	vMatScaler = np.zeros((len(positions), 1))
 
 	for i in range(len(positions)):
-		desiredDerivsMat[i] = np.dot(vMat[i], neumannNormalVecs[i])
-	print(desiredDerivsMat)
-	print(desiredDerivsMat.shape)
+		vMatScaler[i] = np.dot(vMat[i], reshapedImpact[i])
+
+	# print(vMatScaler)
+
+	# Elementwide multiplication between vMatScaler and vMat
+	scaledVMat = vMat*vMatScaler
+	# print("scaledVMat dimension = " + str(scaledVMat.shape))
+
+	desiredDerivsMat = np.zeros((len(positions), 1))
+
+	for i in range(len(positions)):
+		desiredDerivsMat[i] = np.dot(scaledVMat[i], neumannNormals[i])
+	#print(desiredDerivsMat)
+	#print(desiredDerivsMat.shape)
 
 	return w[indexW], desiredDerivsMat
 
-desiredDerivs("newChimeR.0127D4.stl", 128*10**9, 0, 0)
+positions, triangleSet, triNormVecs, w, v = calculateEigenvectors("newChimeR.0127D4.stl", 128*10**9, 1, 0)
+neumannNormalVecs = neumannNormals(positions, triangleSet, triNormVecs)
+v2 = chimeVelocity(0.043, 0.002, 0)
+initialImpact = mallotImpact(positions, np.array([0, .0127, .0535]), v2, .015)
+print("neumannNormal dimension = " + str(neumannNormalVecs.shape))
+print(desiredDerivs(positions, w, v, 0, neumannNormalVecs, initialImpact))
+
