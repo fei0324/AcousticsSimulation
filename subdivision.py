@@ -75,33 +75,12 @@ def subdivide_reconstruct(oriTriangleSet,indices,n):
 	"""
 	numberOfTriangleSets = len(oriTriangleSet) + len(indices)*(4**n) - len(indices)
 	newTriangleSet = np.zeros((numberOfTriangleSets, 3, 3))
-	
-	# for j in range(len(indices)):
-	# 	index = indices[j]
-		
-	# 	for i in range(len(oriTriangleSet))
-			
-	# 		if i == index:
-	# 			# subdivide
-	# 			points, triangleSet, norVecSet = subdivision(oriTriangleSet[index][0], oriTriangleSet[index][1], oriTriangleSet[index][2], n)
-	# 			# replace the old triangle with subdivided triangles
-	# 			for k in range(i, i+4**n):
-	# 				newTriangleSet[k] = triangleSet[k-i]
 
-	# 		# fill the rest with old triangles
-	# 		else:
-
-	# 			# Need to shift indices over based on how many subdivisions we've done already 
-				
-	# 			# j+1 is the number of subdivisions we have completed
-	# 			# Since we are replacing the old instead of only adding, we are subtracting
-	# 			# the number of subdivisions after the shifting over 4**n
-
-	# 			newTriangleSet[i+4**n-j-1] = oriTriangleSet[i]
-
-
+	# listIndex is the index in the list "indices"
 	listIndex = 0
+	# i is the index in oriTriangleSet
 	i = 0
+	# counter is the pointer to the current position to be filled in the newTriangleSet
 	counter = 0
 
 	while i < len(oriTriangleSet):
@@ -112,9 +91,6 @@ def subdivide_reconstruct(oriTriangleSet,indices,n):
 
 			i += 1
 			counter += 1
-			# print("counter = " + str(counter))
-			# print("listIndex = " + str(listIndex))
-			# print("i = " + str(i))
 
 		elif i == indices[listIndex]:
 			# subdivide
@@ -126,8 +102,6 @@ def subdivide_reconstruct(oriTriangleSet,indices,n):
 			listIndex += 1
 			i += 1
 			counter += 4**n
-			# print("subdivided triangle: " + str(i) + " counter = " + str(counter))
-			# print("i = " + str(i))
 
 		else:
 
@@ -140,9 +114,6 @@ def subdivide_reconstruct(oriTriangleSet,indices,n):
 
 			i += 1
 			counter += 1
-			# print("counter = " + str(counter))
-			# print("listIndex = " + str(listIndex))
-			# print("i = " + str(i))
 
 	return newTriangleSet
 
@@ -154,11 +125,24 @@ def subdivide_reconstruct(oriTriangleSet,indices,n):
 # print(newTriangleSet.shape)
 # print(oriTriangleSet.shape)
 
+def search_triangles(oriTriangleSet, impactCoor):
+
+	"""
+	Goal: Serach for the 6 closest triangles around the impact coordinate to subdivide.
+	
+	Input: oriTriangleSet = Original triangle set after reading the stl file
+	       impactCoor = the coordinate of the impact point
+	Output: a list of indices of the 6 triangles we would like to subdivide
+	"""
 
 
+	# Calculate the center of the triangle
 
+	# Create a dictionary {'index': 'distance'} where the value is the distance
+	# between the center of the triangle and the impact coordinate
 
+	# Sort the dictionary based on distance
 
-
+	# Pick the minimum 6 indices and return them in a list
 
 
