@@ -117,13 +117,15 @@ def subdivide_reconstruct(oriTriangleSet,indices,n):
 
 	return newTriangleSet
 
-# chime_mesh = mesh.Mesh.from_file("newChimeR.0127D4.stl")
-# oriTriangleSet = chime_mesh.vectors
+def calculate_centroid_of_triangle(pt1, pt2, pt3):
 
-# newTriangleSet = subdivide_reconstruct(oriTriangleSet,[0, 1, 10, 13, 56], 1)
-# print(newTriangleSet)
-# print(newTriangleSet.shape)
-# print(oriTriangleSet.shape)
+	centroid = np.zeros(3)
+
+	centroid[0] = (pt1[0] + pt2[0] + pt3[0])/3
+	centroid[1] = (pt1[1] + pt2[1] + pt3[1])/3
+	centroid[2] = (pt1[2] + pt2[2] + pt3[2])/3
+
+	return centroid
 
 def search_triangles(oriTriangleSet, impactCoor):
 
@@ -137,12 +139,34 @@ def search_triangles(oriTriangleSet, impactCoor):
 
 
 	# Calculate the center of the triangle
-
 	# Create a dictionary {'index': 'distance'} where the value is the distance
 	# between the center of the triangle and the impact coordinate
+	distanceDict = {}
+
+	for i in range(len(oriTriangleSet)):
+
+		centroid = calculate_centroid_of_triangle(oriTriangleSet[i][0], oriTriangleSet[i][1], oriTriangleSet[i][2])
+		distanceDict[i] = np.linalg.norm(centroid - impactCoor)
 
 	# Sort the dictionary based on distance
+	sortedIndices = sorted(distanceDict, key=distanceDict.__getitem__)
+
+	# print(distanceDict[sortedIndices[0]])
+	# print(distanceDict[sortedIndices[1]])
+	# print(distanceDict[sortedIndices[2]])
+	# print(distanceDict[sortedIndices[3]])
+	# print(distanceDict[sortedIndices[4]])
+	# print(distanceDict[sortedIndices[5]])
 
 	# Pick the minimum 6 indices and return them in a list
+	return sortedIndices[:6]
 
 
+
+chime_mesh = mesh.Mesh.from_file("newChimeR.0127D4.stl")
+oriTriangleSet = chime_mesh.vectors
+
+indices = search_triangles(oriTriangleSet, np.array([0,0,0]))
+
+newTriangleSet = subdivide_reconstruct(oriTriangleSet, indices, 1)
+print(len(newTriangleSet))
