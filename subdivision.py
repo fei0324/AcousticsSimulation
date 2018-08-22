@@ -62,19 +62,21 @@ def subdivision(pt1, pt2, pt3, n):
 	return points, triangleSet, norVecSet
 
 
-def subdivide_reconstruct(oriTriangleSet,indices,n):
+def subdivide_reconstruct(oriTriangleSet,oriNormVecSet,indices,n):
 
 	"""
 	Goal: Subdivide the triangles of given indices n times, replace the
 		  subdivided triangles with new points.
 	
 	Input: oriTriangleSet = Original triangle set after reading the stl file
+		   oriNormVecSet = Original triangle normals from the stl file
 		   indices = a list of indices of the triangles that need to be divided
 		   n = the number of times of subdivision
 	Output: a new triangle set in the same format as stl file vectors.
 	"""
 	numberOfTriangleSets = len(oriTriangleSet) + len(indices)*(4**n) - len(indices)
 	newTriangleSet = np.zeros((numberOfTriangleSets, 3, 3))
+	newNormVecSet = np.zeros((numberOfTriangleSets, 3))
 
 	# listIndex is the index in the list "indices"
 	listIndex = 0
@@ -88,6 +90,7 @@ def subdivide_reconstruct(oriTriangleSet,indices,n):
 		if listIndex == len(indices):
 
 			newTriangleSet[counter] = oriTriangleSet[i]
+			newNormVecSet[counter] = oriNormVecSet[i]
 
 			i += 1
 			counter += 1
@@ -98,6 +101,7 @@ def subdivide_reconstruct(oriTriangleSet,indices,n):
 			# replace the old triangle with subdivided triangles
 			for k in range(counter, counter+4**n):
 				newTriangleSet[k] = triangleSet[k-counter]
+				newNormVecSet[k] = norVecSet[k-counter]
 			
 			listIndex += 1
 			i += 1
@@ -111,11 +115,12 @@ def subdivide_reconstruct(oriTriangleSet,indices,n):
 			# the number of subdivisions after the shifting over 4**n
 
 			newTriangleSet[counter] = oriTriangleSet[i]
+			newNormVecSet[counter] = oriNormVecSet[i]
 
 			i += 1
 			counter += 1
 
-	return newTriangleSet
+	return newTriangleSet, newNormVecSet
 
 def calculate_centroid_of_triangle(pt1, pt2, pt3):
 
@@ -165,8 +170,10 @@ def search_triangles(oriTriangleSet, impactCoor):
 
 chime_mesh = mesh.Mesh.from_file("newChimeR.0127D4.stl")
 oriTriangleSet = chime_mesh.vectors
+oriNormVecSet = chime_mesh.normals
 
 indices = search_triangles(oriTriangleSet, np.array([0,0,0]))
 
-newTriangleSet = subdivide_reconstruct(oriTriangleSet, indices, 1)
+newTriangleSet, newNormVecSet = subdivide_reconstruct(oriTriangleSet, oriNormVecSet, indices, 1)
 print(len(newTriangleSet))
+print(len(newNormVecSet))
