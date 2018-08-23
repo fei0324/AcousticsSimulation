@@ -156,24 +156,17 @@ def search_triangles(oriTriangleSet, impactCoor):
 	# Sort the dictionary based on distance
 	sortedIndices = sorted(distanceDict, key=distanceDict.__getitem__)
 
-	# print(distanceDict[sortedIndices[0]])
-	# print(distanceDict[sortedIndices[1]])
-	# print(distanceDict[sortedIndices[2]])
-	# print(distanceDict[sortedIndices[3]])
-	# print(distanceDict[sortedIndices[4]])
-	# print(distanceDict[sortedIndices[5]])
-
 	# Pick the minimum 6 indices and return them in a list
 	return sortedIndices[:6]
 
 
 
-chime_mesh = mesh.Mesh.from_file("newChimeR.0127D4.stl")
-oriTriangleSet = chime_mesh.vectors
-oriNormVecSet = chime_mesh.normals
+# chime_mesh = mesh.Mesh.from_file("newChimeR.0127D4.stl")
+# oriTriangleSet = chime_mesh.vectors
+# oriNormVecSet = chime_mesh.normals
 
-indices = search_triangles(oriTriangleSet, np.array([0,0,0]))
+# indices = search_triangles(oriTriangleSet, np.array([0,0,0]))
 
-newTriangleSet, newNormVecSet = subdivide_reconstruct(oriTriangleSet, oriNormVecSet, indices, 1)
-print(len(newTriangleSet))
-print(len(newNormVecSet))
+# newTriangleSet, newNormVecSet = subdivide_reconstruct(oriTriangleSet, oriNormVecSet, indices, 1)
+# print(len(newTriangleSet))
+# print(len(newNormVecSet))
