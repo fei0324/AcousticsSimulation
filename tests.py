@@ -30,18 +30,25 @@ class TestSubdivisionReconstruct(unittest.TestCase):
 
 	def setUp(self):
 
-		self.oriTriangoSet = mesh.Mesh.from_file("newChimeR.0127D4.stl").vectors
-		self.indices = [0, 1, 10, 13, 56]
+		self.chime_mesh = mesh.Mesh.from_file("newChimeR.0127D4.stl")
+		self.oriTriangoSet = self.chime_mesh.vectors
+		self.oriNormVecSet = self.chime_mesh.normals
+		self.indices = [0, 1, 10, 13, 20, 56]
 		self.n = 1
 
-		self.newTriangleSet = subdivide_reconstruct(self.oriTriangoSet, self.indices, self.n)
+		self.newTriangleSet, self.newNormVecSet = subdivide_reconstruct(self.oriTriangoSet, self.oriNormVecSet, self.indices, self.n)
 
 	def test_size_of_new_triangle_set(self):
 
 		self.assertEqual(len(self.oriTriangoSet), 80, msg="The size of the original triangle set is not as expected.")
-		self.assertEqual(len(self.indices), 5, msg="The size of the list of triangles we want to subdivide is not as expected.")
+		self.assertEqual(len(self.indices), 6, msg="The size of the list of triangles we want to subdivide is not as expected.")
 
-		self.assertEqual(len(self.newTriangleSet), 95, msg="The size of the newTriangleSet is not the same as calculated.")
+		self.assertEqual(len(self.newTriangleSet), 98, msg="The size of the newTriangleSet is not the same as calculated.")
+
+	def test_size_of_new_normvecset(self):
+
+		self.assertEqual(len(self.oriNormVecSet), 80, msg="The size of the original normal vector set is not as expected.")
+		self.assertEqual(len(self.newNormVecSet), 98, msg="The size of the newNormVecSet is not the same as calculated. ")
 
 	def test_insertion_index_of_new_triangles(self):
 
