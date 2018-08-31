@@ -74,6 +74,9 @@ def subdivide_reconstruct(oriTriangleSet,oriNormVecSet,indices,n):
 		   n = the number of times of subdivision
 	Output: a new triangle set in the same format as stl file vectors.
 	"""
+
+	print("indices: " + str(indices))
+
 	numberOfTriangleSets = len(oriTriangleSet) + len(indices)*(4**n) - len(indices)
 	newTriangleSet = np.zeros((numberOfTriangleSets, 3, 3))
 	newNormVecSet = np.zeros((numberOfTriangleSets, 3))
@@ -148,16 +151,29 @@ def search_triangles(oriTriangleSet, impactCoor):
 	# between the center of the triangle and the impact coordinate
 	distanceDict = {}
 
+	centroids = []
+
 	for i in range(len(oriTriangleSet)):
 
 		centroid = calculate_centroid_of_triangle(oriTriangleSet[i][0], oriTriangleSet[i][1], oriTriangleSet[i][2])
-		distanceDict[i] = np.linalg.norm(centroid - impactCoor)
+		distanceDict[i] = np.linalg.norm(centroid-impactCoor)
+		centroids.append(centroid)
+
+	# # print(centroids[24])
+	# print(impactCoor)
+	# print(centroids[24] - impactCoor)
+	# print(np.linalg.norm(centroids[24]-impactCoor))
+	# print(np.linalg.norm(centroids[25]-impactCoor))
+	# print(np.linalg.norm(centroids[27]-impactCoor))
+	print(distanceDict[24])
+	print(distanceDict[25])
+	print(distanceDict[27])
 
 	# Sort the dictionary based on distance
 	sortedIndices = sorted(distanceDict, key=distanceDict.__getitem__)
 
 	# Pick the minimum 6 indices and return them in a list
-	return sortedIndices[:6]
+	return sortedIndices[:6], centroids
 
 
 
