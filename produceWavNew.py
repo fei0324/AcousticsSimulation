@@ -41,10 +41,12 @@ def produceWav(filename,impactCoor,n,youngs,fs):
 
 	oriTriangleSet = file_mesh.vectors
 	oriNormVecSet = file_mesh.normals
+	#print(len(oriTriangleSet))
 
 	indices = search_triangles(oriTriangleSet, impactCoor)
 
 	triangleSet, triNormVecs = subdivide_reconstruct(oriTriangleSet, oriNormVecSet, indices, n)
+	#print(len(triangleSet))
 
 	# triangleSet = []
 	# triNormVecs = []
@@ -69,68 +71,59 @@ def produceWav(filename,impactCoor,n,youngs,fs):
 	# This function takes in Young's modulus for different materials
 	Mijmatrix = mijMat(youngs,Llist,triangleSet,positions)
 
-	"""
+	
 	# Plotting for test purposes, delete after
-	fig = plt.figure()
-	ax = fig.add_subplot(111, projection='3d')
+	# fig = plt.figure()
+	# ax = fig.add_subplot(111, projection='3d')
 
-	xs = []
-	ys = []
-	zs = []
-	wxs = []
-	wys = []
-	wzs = []
+	# xs = []
+	# ys = []
+	# zs = []
+	# ixs = []
+	# iys = []
+	# izs = []
+	# indices_triangles = []
+	# for i in indices:
+	# 	indices_triangles.append(oriTriangleSet[i])
+	# print(indices_triangles)
 
-	for i in range(len(positions)):
-		xs.append(positions[i][0])
-		ys.append(positions[i][1])
-		zs.append(positions[i][2])
+	# for i in range(len(positions)):
+	# 	xs.append(positions[i][0])
+	# 	ys.append(positions[i][1])
+	# 	zs.append(positions[i][2])
 
-	ax.scatter(xs, ys, zs)
-	plt.hold(True)
+	# ax.scatter(xs, ys, zs)
+	# plt.hold(True)
 
-	for i in range(len(weirdPoints)):
-		wxs.append(weirdPoints[i][0])
-		wys.append(weirdPoints[i][1])
-		wzs.append(weirdPoints[i][2])
+	# indices_points = pointCollection(indices_triangles)
+	# for i in range(len(indices_points)):
+	# 	ixs.append(indices_points[i][0])
+	# 	iys.append(indices_points[i][1])
+	# 	izs.append(indices_points[i][2])
 
-	ax.scatter(wxs, wys, wzs, s=50, c="yellow")
-	plt.show()
-	"""
+
+	# ax.scatter(ixs, iys, izs, s=50, c='y')
+	# plt.show()
+	
 
 
 	OTMat = outsideMat(positions,Mijmatrix)
 	Dmat = diagonalMat(positions,Mijmatrix)
 
 	BigMatrix = OTMat + Dmat
-	print(BigMatrix.shape)
+	#print(BigMatrix.shape)
 	# for row in BigMatrix:
 	# 	print(row)
 
 	# w is eigenvalues, v is unit length eigenvectors
 	w, v = np.linalg.eig(BigMatrix)
-
-	# Call mallotImpact()
-
-	"""
-	initialImpact = np.zeros(len(positions)*3)
-	initialImpact[18] = 500
-	initialImpact[19] = 500
-	initialImpact[20] = 500
-	initialImpact[21] = 500
-	initialImpact[22] = 500
-	initialImpact[23] = 500
-	"""
 	
-
 	#print "eigenvectors matrix shape = " + str(v.shape)
 	#print "initialImpact shape = " + str(initialImpact.shape)
 
 	v2 = chimeVelocity(0.043, 0.002, 0)
 	# initialImpact = mallotImpact(positions, np.array([0, .0127, .0535]), v2, .015)
 	initialImpact = mallotImpact(positions, impactCoor, v2, .015)
-
-
 
 	coefficients = np.linalg.lstsq(v, initialImpact)[0]
 	#print "coefficients shape = " + str(coefficients.shape)
@@ -170,4 +163,5 @@ def produceWav(filename,impactCoor,n,youngs,fs):
 	# Make the wav file
 	scipy.io.wavfile.write("Wavfile1.wav", fs, np.int16(np.real(wavVector)))
 
-produceWav("newChimeR.0127D4.stl",np.array([0, .0127, .0535]),1,128*10**9,44100)
+produceWav("newChimeR.0127D4.stl",np.array([0, .0127, .0535]),2,128*10**9,44100)
+#produceWav("sphere_5.stl",np.array([0, .0127, .0535]),1,128*10**9,44100)

@@ -2,7 +2,10 @@ import numpy as np
 from stl import mesh
 
 from neumannNormals import *
-from subdivision import *
+from subdivision import (subdivision,
+						subdivide_reconstruct,
+						calculate_centroid_of_triangle,
+						search_triangles,)
 from lengthSolver import *
 from pointCollection import *
 from mijMat import *
@@ -15,7 +18,7 @@ from chimeVelocity import *
 def calculateEigenvectors(filename, youngs, n, indexW):
 
 	"""
-	Calculat the desiredDerivs for a certain eigenvalue. This is used in the airsolver
+	Calculate the desiredDerivs for a certain eigenvalue. This is used in the airsolver
 
 	Input: filename needs to be in '.stl' format ex. filename = 'sphere.stl'
 		   youngs = Young's modulus of the material
@@ -88,21 +91,6 @@ def desiredDerivs(positions, w, v, indexW, neumannNormals, initialImpact):
 	# e.g. (if len(positions) = n, the current v is 3nx3n and each column is 3nx1)
 	# to a matrix having each x, y, z on the same row (nx3)
 	vMat = np.reshape(v[:,indexW], (len(positions), 3))
-	# print("vMat: " + str(vMat))
-
-	# This coming part is replaced by the reshape function. Should write a test to confirm they
-	# are always the same
-	# vMat = np.zeros((len(positions), 3))
-
-
-	# for i in range(len(v[:,indexW])):
-	# 	if i%3 == 0:
-	# 		xyz = np.array([v[i,indexW], v[i+1,indexW], v[i+2,indexW]])
-	# 		vMat[i/3] = xyz
-
-	# print(vMat1.shape)
-	# print(vMat.shape)
-	# print(vMat1 == vMat)
 
 	# Add mallotImpact scaler
 	# Need to test initialImpact cannot be all 0
@@ -113,8 +101,6 @@ def desiredDerivs(positions, w, v, indexW, neumannNormals, initialImpact):
 
 	for i in range(len(positions)):
 		vMatScaler[i] = np.dot(vMat[i], reshapedImpact[i])
-
-	# print(vMatScaler)
 
 	# Elementwide multiplication between vMatScaler and vMat
 	scaledVMat = vMat*vMatScaler

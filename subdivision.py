@@ -165,15 +165,15 @@ def search_triangles(oriTriangleSet, impactCoor):
 	# print(np.linalg.norm(centroids[24]-impactCoor))
 	# print(np.linalg.norm(centroids[25]-impactCoor))
 	# print(np.linalg.norm(centroids[27]-impactCoor))
-	print(distanceDict[24])
-	print(distanceDict[25])
-	print(distanceDict[27])
+	print("Distance triangle 0: " + str(distanceDict[0]))
+	print("Distance triangle 1: " + str(distanceDict[1]))
+	print("Distance triangle 2: " + str(distanceDict[2]))
 
 	# Sort the dictionary based on distance
 	sortedIndices = sorted(distanceDict, key=distanceDict.__getitem__)
 
 	# Pick the minimum 6 indices and return them in a list
-	return sortedIndices[:6], centroids
+	return sortedIndices[:(len(oriTriangleSet)//4)], centroids
 
 
 

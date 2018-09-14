@@ -17,9 +17,13 @@ oriNormVecSet = chime_mesh.normals
 
 impact_coord = np.array([0, .0127, .0535])
 indices, centroids = search_triangles(oriTriangleSet, impact_coord)
-#print(centroids)
+
 newTriangleSet, newNormVecSet = subdivide_reconstruct(oriTriangleSet, oriNormVecSet, indices, 2)
 new_points = pointCollection(newTriangleSet)
+
+print("impact coordinate = " + str(impact_coord))
+print("centroid 0 = " + str(centroids[0]))
+print("centroid 2 = " + str(centroids[2]))
 
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
@@ -34,7 +38,6 @@ for point in new_points:
 	ys.append(point[1])
 	zs.append(point[2])
 ax.scatter(xs, ys, zs)
-
 plt.hold(True)
 
 # plot centroids
@@ -44,8 +47,9 @@ czs = []
 
 
 ax.scatter(impact_coord[0], impact_coord[1], impact_coord[2], s=200)
+# ax.set_aspect("equal")
 
-test_centroids = [centroids[24], centroids[25], centroids[27]]
+test_centroids = [centroids[24], centroids[25], centroids[26]]
 for centroid in test_centroids:
 	cxs.append(centroid[0])
 	cys.append(centroid[1])
@@ -69,7 +73,7 @@ plt.hold(True)
 # Plot the searched trianbles
 
 point_order = [0,1,2,0]
-test_indices = [24,25,27]
+test_indices = indices
 
 for index in test_indices:
 	triangle = oriTriangleSet[index]
