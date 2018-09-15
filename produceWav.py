@@ -16,9 +16,12 @@ from outsideMat import *
 from diagonalMat import *
 from mijMat import *
 
-# import winsound
+import line_profiler
+import atexit
+profile = line_profiler.LineProfiler()
+atexit.register(profile.print_stats)
 
-
+@profile
 def produceWav(filename,n,youngs,fs):
 
 	"""
@@ -58,6 +61,7 @@ def produceWav(filename,n,youngs,fs):
 	positions = pointCollection(triangleSet)
 
 	# This function takes in Young's modulus for different materials
+	
 	Mijmatrix = mijMat(youngs,Llist,triangleSet,positions)
 
 	"""
@@ -98,22 +102,6 @@ def produceWav(filename,n,youngs,fs):
 	# w is eigenvalues, v is unit length eigenvectors
 	w, v = np.linalg.eig(BigMatrix)
 
-	# Call mallotImpact()
-
-	"""
-	initialImpact = np.zeros(len(positions)*3)
-	initialImpact[18] = 500
-	initialImpact[19] = 500
-	initialImpact[20] = 500
-	initialImpact[21] = 500
-	initialImpact[22] = 500
-	initialImpact[23] = 500
-	"""
-	
-
-	#print "eigenvectors matrix shape = " + str(v.shape)
-	#print "initialImpact shape = " + str(initialImpact.shape)
-
 	v2 = chimeVelocity(0.043, 0.002, 0)
 	initialImpact = mallotImpact(positions, np.array([0, .0127, .0535]), v2, .015)
 
@@ -140,19 +128,6 @@ def produceWav(filename,n,youngs,fs):
 	for i in range(10):
 		wavVector = np.concatenate((wavVectorUnit1, wavVectorUnit))
 		wavVectorUnit1 = wavVector
-
-	# Gives me an audio alert when the program finishes
-	"""
-	duration = 1000
-	freq = 440
-	winsound.Beep(freq, duration)
-
-	print np.size(wavVector)
-	#print np.dtype(wavVector)
-	print np.dtype(wavVector[0])
-	plt.plot(np.real(wavVector))
-	plt.show()
-	"""
 
 	# Make the wav file
 	scipy.io.wavfile.write("Wavfile.wav", fs, np.int16(np.real(wavVector)))

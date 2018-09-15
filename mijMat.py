@@ -4,6 +4,11 @@ from stl import mesh
 
 import matplotlib.pyplot as plt
 
+import line_profiler
+import atexit
+profile = line_profiler.LineProfiler()
+atexit.register(profile.print_stats)
+
 def triangleArea(triangleSet):
 
 	"""
@@ -24,8 +29,7 @@ def triangleArea(triangleSet):
 
 	return triangleAreaSet
 
-
-
+@profile
 def sameTriangle(indexI,indexJ,positions,triangleSet):
 
 	"""
@@ -54,7 +58,7 @@ def sameTriangle(indexI,indexJ,positions,triangleSet):
 
 	return triIndex
 
-
+@profile
 def mijMat(elastic,l,triangleSet,positions):
 
 	"""
