@@ -88,7 +88,7 @@ class TestSearchTriangles(unittest.TestCase):
 
 	def test_centroid_of_triangle(self):
 
-		# TEst the centroid is in the same plane as the triangle
+		# Test the centroid is in the same plane as the triangle
 
 		pt1 = self.triangle[0]
 		pt2 = self.triangle[1]

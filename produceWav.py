@@ -21,6 +21,10 @@ import atexit
 profile = line_profiler.LineProfiler()
 atexit.register(profile.print_stats)
 
+# This is to use the line profiler without special commands
+# Run teh file as usual and it will profile and show stats
+# python produceWav.py
+
 @profile
 def produceWav(filename,n,youngs,fs):
 

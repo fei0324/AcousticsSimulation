@@ -29,7 +29,7 @@ def triangleArea(triangleSet):
 
 	return triangleAreaSet
 
-@profile
+# @profile
 def sameTriangle(indexI,indexJ,positions,triangleSet):
 
 	"""
@@ -72,7 +72,7 @@ def mijMat(elastic,l,triangleSet,positions):
 	Mij = np.zeros((len(positions),len(positions)))
 	triangleAreaSet = triangleArea(triangleSet)
 
-	weirdPoints = []
+	#weirdPoints = []
 
 	for i in range(len(positions)):
 		for j in range(len(positions)):
