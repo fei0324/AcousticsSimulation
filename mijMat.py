@@ -1,11 +1,12 @@
 import math
 import numpy as np
 from stl import mesh
-
 import matplotlib.pyplot as plt
-
 import line_profiler
 import atexit
+
+from utilities import both_close_to
+
 profile = line_profiler.LineProfiler()
 atexit.register(profile.print_stats)
 
@@ -30,35 +31,24 @@ def triangleArea(triangleSet):
 	return triangleAreaSet
 
 # @profile
-def sameTriangle(indexI,indexJ,positions,triangleSet):
+def sameTriangle(indexI, indexJ, positions, triangleSet):
 
 	"""
 	Test if two points are in the same triangle
 
 	Input: indexI = the index of the first point in positions
-		   indexJ = the index of the second point in positions (indexI has to be different from indexJ)
-		   positions = the list of all unique points from the STL file
-		   triangleSet = the STL file or the triangle set generated after
+			indexJ = the index of the second point in positions (indexI has to be different from indexJ)
+			positions = the list of all unique points from the STL file
+			triangleSet = the STL file or the triangle set generated after
 	Output: triIndex = a list of 0 to 2 elements, indices of the triangles that contain the two point from input
 	"""
 
-	triIndex = []
+	if indexI is indexJ:
+		return []
 
-	if indexI != indexJ:
-		for m in range(len(triangleSet)):
-			triangleI = -2
-			triangleJ = -3
-			for n in range(len(triangleSet[m])):
-				if abs(np.linalg.norm(positions[indexI] - triangleSet[m][n]))<1e-5:
-					triangleI = m
-				if abs(np.linalg.norm(positions[indexJ] - triangleSet[m][n]))<1e-5:
-					triangleJ = m
-			if triangleI == triangleJ:
-				triIndex.append(m)
+	return [m for m, triangle_list in enumerate(triangleSet) if both_close_to(positions[indexI], positions[indexJ], triangle_list)]
 
-	return triIndex
-
-@profile
+# @profile
 def mijMat(elastic,l,triangleSet,positions):
 
 	"""
